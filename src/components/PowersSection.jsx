@@ -54,25 +54,41 @@ export default function PowersSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {powers.map((p) => (
-            <article
-              key={p.title}
-              className={`bg-fur/40 ${p.radius} border-2 border-dashed border-mustard p-7 flex flex-col justify-between shadow-lg relative group hover:bg-fur/55 transition-all duration-300`}
-            >
-              <div>
-                <div className="inline-block px-3 py-1 bg-mustard text-ink font-semibold text-xs rounded-sm mb-5 shadow-sm">
-                  {p.tag}
-                </div>
-                <div className="w-12 h-12 rounded-xl bg-umber/80 border border-mustard/60 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                  {p.icon}
-                </div>
-                <h3 className="font-serif text-2xl text-parchment font-bold mb-3">{p.title}</h3>
-                <p className="text-parchment/85 text-sm leading-relaxed">{p.desc}</p>
+            <div key={p.title} className="group perspective-1000 h-[380px] sm:h-[400px]">
+              <div className="relative w-full h-full transition-transform duration-700 preserve-3d group-hover:rotate-y-180 cursor-pointer">
+                
+                {/* Front Face */}
+                <article
+                  className={`absolute inset-0 backface-hidden bg-fur/40 ${p.radius} border-2 border-dashed border-mustard p-7 flex flex-col justify-between shadow-lg`}
+                >
+                  <div className="flex flex-col items-center text-center h-full pt-4">
+                    <div className="inline-block px-3 py-1 bg-mustard text-ink font-semibold text-xs rounded-sm mb-6 shadow-sm">
+                      {p.tag}
+                    </div>
+                    <div className="w-20 h-20 rounded-xl bg-umber/80 border border-mustard/60 flex items-center justify-center mb-6">
+                      {/* Increase SVG size manually by overriding w-6 h-6 if they exist in the icon prop, but the icon prop has hardcoded classes. Let's just wrap the icon in a scaling div or replace the icon classes. */}
+                      <div className="scale-[1.6]">
+                        {p.icon}
+                      </div>
+                    </div>
+                    <h3 className="font-serif text-2xl text-parchment font-bold mb-3">{p.title}</h3>
+                  </div>
+                  <div className="mt-6 pt-4 border-t border-dashed border-mustard/30 text-xs text-parchment/70 flex items-center justify-between w-full">
+                    <span>{p.footLeft}</span>
+                    <span className="text-ember font-bold">Hover to Read &rarr;</span>
+                  </div>
+                </article>
+
+                {/* Back Face */}
+                <article
+                  className={`absolute inset-0 backface-hidden rotate-y-180 bg-fur/55 ${p.radius} border-2 border-dashed border-mustard p-7 flex flex-col justify-center items-center text-center shadow-[0_0_20px_rgba(217,154,52,0.15)]`}
+                >
+                  <h3 className="font-serif text-xl text-ember font-bold mb-4">{p.title}</h3>
+                  <p className="text-parchment/90 text-sm sm:text-base leading-relaxed px-2">{p.desc}</p>
+                </article>
+
               </div>
-              <div className="mt-6 pt-4 border-t border-dashed border-mustard/30 text-xs text-parchment/70 flex items-center justify-between">
-                <span>{p.footLeft}</span>
-                <span className="text-ember font-bold">{p.footRight}</span>
-              </div>
-            </article>
+            </div>
           ))}
         </div>
       </div>

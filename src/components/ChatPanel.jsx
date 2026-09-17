@@ -34,6 +34,7 @@ export default function ChatPanel() {
   const [showFinish, setShowFinish] = useState(false);
   const [capturedEmail, setCapturedEmail] = useState("");
   const scrollRef = useRef(null);
+  const submittingRef = useRef(false);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -42,7 +43,7 @@ export default function ChatPanel() {
   async function handleSend(e) {
     if (e) e.preventDefault();
     const text = input.trim();
-    if (!text || submitting || done) return;
+    if (!text || submittingRef.current) return;
 
     // Scan for email silently
     const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/gi;
@@ -55,6 +56,7 @@ export default function ChatPanel() {
     setMessages(newHistory);
     setInput("");
     setSubmitting(true);
+    submittingRef.current = true;
 
     try {
       const res = await fetch(CHAT_API_URL, {
@@ -73,13 +75,14 @@ export default function ChatPanel() {
       setMessages([...newHistory, { role: "assistant", content: reply }]);
     } finally {
       setSubmitting(false);
+      submittingRef.current = false;
       if (newHistory.length > 3) setShowFinish(true); // Show finish button after a few exchanges
     }
   }
 
   /* ── Final Submission via Resend ── */
   async function handleFinish() {
-    if (submitting || done || messages.length <= 1) return;
+    if (submittingRef.current || done || messages.length <= 1) return;
     
     if (!capturedEmail) {
       alert("Please provide an email address in the chat so Tedman can follow up with you before finishing!");
@@ -87,6 +90,7 @@ export default function ChatPanel() {
     }
 
     setSubmitting(true);
+    submittingRef.current = true;
 
     const timestamp = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
     const transcriptText = messages
@@ -122,6 +126,7 @@ export default function ChatPanel() {
       ]);
     } finally {
       setSubmitting(false);
+      submittingRef.current = false;
     }
   }
 
@@ -227,16 +232,16 @@ export default function ChatPanel() {
             <input
               autoComplete="off"
               className="flex-1 bg-parchment text-ink placeholder-ink/60 border-2 border-mustard/60 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ember focus:border-mustard"
-              placeholder={done ? "Conversation complete — Tedman has your request." : "Whisper or speak your worry to Tedman..."}
+              placeholder={done ? "Tedman is still here if you need to talk more..." : "Whisper or speak your worry to Tedman..."}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              disabled={done || submitting}
+              disabled={submitting}
             />
             <button
               aria-label="Send message to Tedman"
               className="bg-ember text-ink hover:bg-ember/90 font-bold px-5 py-3 rounded-xl border border-mustard shadow-[0_2px_10px_rgba(255,217,160,0.4)] hover:shadow-[0_4px_16px_rgba(255,217,160,0.7)] active:scale-95 transition-all flex items-center gap-1.5 text-sm disabled:opacity-50"
               type="submit"
-              disabled={done || submitting || !input.trim()}
+              disabled={submitting || !input.trim()}
             >
               <span>Send</span>
               <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
