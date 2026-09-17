@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Tedman Patchwork Colors ── */
+  --color-mustard: #D99A34;
+  --color-umber: #241813;
+  --color-fur: #8B5A3C;
+  --color-parchment: #F1E4CC;
+  --color-ember: #FFD9A0;
+  --color-ink: #1A120D;
+
+  /* ── Animations ── */
+  --animate-fade-in: fadeIn 0.4s ease-out;
+  --animate-slide-up: slideUp 0.5s ease-out;
+  --animate-heart-pulse: warmPulse 3.5s ease-in-out infinite;
+  --animate-gentle-hover: ambientDrift 6s ease-in-out infinite;
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes warmPulse {
+    0%, 100% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.85;
+      filter: drop-shadow(0 0 25px rgba(255, 217, 160, 0.85)) drop-shadow(0 0 50px rgba(217, 154, 52, 0.6));
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(1.18);
+      opacity: 1;
+      filter: drop-shadow(0 0 45px rgba(255, 217, 160, 1)) drop-shadow(0 0 80px rgba(217, 154, 52, 0.9));
+    }
+  }
+  @keyframes ambientDrift {
+    0%, 100% { 
+      transform: translateY(0px); 
+      box-shadow: 0 0 25px rgba(217, 154, 52, 0.15);
+    }
+    50% { 
+      transform: translateY(-12px); 
+      box-shadow: 0 0 70px rgba(217, 154, 52, 0.55);
+    }
+  }
+}
+
+/* ── Fabric Textures ── */
+.bg-woven {
+  background-color: #241813;
+  background-image:
+    radial-gradient(#3a271f 0.75px, transparent 0.75px),
+    radial-gradient(#1c130f 0.75px, #241813 0.75px);
+  background-size: 12px 12px;
+  background-position: 0 0, 6px 6px;
+}
+
+.border-stitch {
+  border: 2px dashed rgba(217, 154, 52, 0.6);
+}
+.border-stitch-light {
+  border: 2px dashed rgba(241, 228, 204, 0.4);
+}
+
+/* ── Patchwork Shapes ── */
+.patch-radius-1 { border-radius: 24px 8px 22px 10px; }
+.patch-radius-2 { border-radius: 12px 28px 10px 24px; }
+.patch-radius-3 { border-radius: 20px 10px 26px 8px; }
+.quilt-radius { border-radius: 32px 14px 28px 16px; }
+
+/* ── Base Resets ── */
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    overscroll-behavior: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection {
+    background-color: var(--color-mustard);
+    color: var(--color-ink);
+  }
+}
+
+/* ── Scrollbar Hiding ── */
+::-webkit-scrollbar { display: none; }
+* { scrollbar-width: none; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-heart-pulse,
+  .animate-gentle-hover {
+    animation: none;
+  }
+}
